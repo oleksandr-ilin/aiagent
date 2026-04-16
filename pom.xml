@@ -31,6 +31,12 @@
 		<spring-ai.version>1.1.4</spring-ai.version>
 	</properties>
 	<dependencies>
+        <!-- MCP Client dependencies -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-client</artifactId>
+        </dependency>
+
 	    <!-- RAG Dependencies -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
