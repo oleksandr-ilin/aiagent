@@ -20,4 +20,9 @@ public class InvocationController {
         String username = auth != null ? auth : "default";
         return chatService.chat(request.prompt(), username);
     }
+
+    @PostMapping(value = "load", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public void loadDocument(@RequestBody String content) {
+        chatService.loadDocument(content);
+    }
 }
