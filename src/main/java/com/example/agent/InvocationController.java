@@ -1,6 +1,8 @@
 package com.example.agent;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
@@ -16,9 +18,13 @@ public class InvocationController {
     @PostMapping(value = "invocations", produces = MediaType.TEXT_PLAIN_VALUE)
     public Flux<String> handleInvocation(
             @RequestBody InvocationRequest request,
-            @RequestHeader(value = "Authorization", required = false) String auth) {
-        String username = auth != null ? auth : "default";
-        return chatService.chat(request.prompt(), username);
+            @AuthenticationPrincipal Jwt jwt) {
+        if (jwt == null) {
+            return chatService.chat(request.prompt(), "default");
+        }
+        String visitorId = jwt.getSubject().replace("-", "").substring(0, 25);
+        String sessionId = jwt.getClaim("auth_time").toString();
+        return chatService.chat(request.prompt(), visitorId + ":" + sessionId);
     }
 
     @PostMapping(value = "load", consumes = MediaType.TEXT_PLAIN_VALUE)
